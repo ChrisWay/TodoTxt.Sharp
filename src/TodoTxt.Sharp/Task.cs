@@ -26,8 +26,38 @@ namespace TodoTxt.Sharp
 
 		public char? Priority { get; set; }
 
-		public bool IsCompleted { get; set; }
-		public DateTime? CompletionDate { get; set; }
+        private bool _isCompleted;
+        private bool _isSettingCompleted;
+		public bool IsCompleted 
+        {
+            get { return _isCompleted; }
+            set
+            {
+                _isCompleted = value;
+                if (!_isSettingCompleted)
+                {
+                    _isSettingCompleted = true;
+                    CompletionDate = _isCompleted ? (DateTime?)DateTime.Today : null;
+                    _isSettingCompleted = false;
+                }
+            }
+        }
+
+        private DateTime? _completionDate;
+		public DateTime? CompletionDate 
+        {
+            get { return _completionDate; }
+            set
+            {
+                _completionDate = value;
+                if (!_isSettingCompleted)
+                {
+                    _isSettingCompleted = true;
+                    IsCompleted = _completionDate.HasValue;
+                    _isSettingCompleted = false;
+                }
+            }
+        }
 		
 		public DateTime? CreationDate { get; set; }
 

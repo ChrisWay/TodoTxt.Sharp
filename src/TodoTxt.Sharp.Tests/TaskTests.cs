@@ -69,5 +69,7 @@ namespace TodoTxt.Sharp.Tests
 
             Assert.IsNull(t.CreationDate);
         }
+
+        //Test for setting IsCompleted sets DateCompleted to todays date and setting DateCompleted sets IsCompleted to true.
     }
 }
