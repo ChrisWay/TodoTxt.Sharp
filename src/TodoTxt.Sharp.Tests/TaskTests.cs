@@ -29,12 +29,12 @@ namespace TodoTxt.Sharp.Tests
         }
 
         [Test]
-        public void Priority_TaskWithTwoPriorities_IsA()
+        public void Priority_TaskWithTwoPriorities_IsNull()
         {
             var t = new Task("(A)(B) a task");
-            
-            Assert.AreEqual('A', t.Priority);
-            Assert.IsTrue(t.HasPriority);
+
+            Assert.IsNull(t.Priority);
+            Assert.IsFalse(t.HasPriority);
         }
 
         [Test]
@@ -44,6 +44,30 @@ namespace TodoTxt.Sharp.Tests
 
             Assert.IsNull(t.Priority);
             Assert.IsFalse(t.HasPriority);
+        }
+
+        [Test]
+        public void CreationDate_TaskWithACreationDate_CreationDateIsNotNull()
+        {
+            var t = new Task("2013-02-05 some task");
+
+            Assert.AreEqual(new DateTime(2013, 2, 5), t.CreationDate);
+        }
+
+        [Test]
+        public void CreationDate_TaskWithPriorityAndACreationDate_CreationDateIsNotNull()
+        {
+            var t = new Task("(A) 2013-02-05 some task");
+
+            Assert.AreEqual(new DateTime(2013, 2, 5), t.CreationDate);
+        }
+
+        [Test]
+        public void CreationDate_TaskWithNoCreationDate_CreationDateIsNull()
+        {
+            var t = new Task("some task");
+
+            Assert.IsNull(t.CreationDate);
         }
     }
 }
