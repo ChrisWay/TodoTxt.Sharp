@@ -8,6 +8,15 @@ namespace TodoTxt.Sharp
 {
 	public class Task
 	{
+        public Task(string raw)
+        {
+            Raw = raw;
+        }
+
+        public Task()
+        {
+        }
+
 		public string Content { get; set; }
 
 		public bool HasPriority
@@ -25,6 +34,20 @@ namespace TodoTxt.Sharp
 		public IList<string> Contexts { get; set; }
 		public IList<string> Projects { get; set; }
 
-		public string Raw { get; set; }
+        private string _raw;
+		public string Raw 
+        {
+            get { return _raw; }
+            set
+            {
+                _raw = value;
+                TaskProcessor.ProcessRaw(_raw, this);
+            }
+        }
+
+        public override string ToString()
+        {
+            return Raw;
+        }
 	}
 }
