@@ -10,6 +10,21 @@ namespace TodoTxt.Sharp.Tests
     [TestFixture]
     public class TaskTests
     {
+		[Test]
+		public void Task_ABlankTask_AllDefault()
+		{
+			var t = new Task(string.Empty);
+
+			Assert.AreEqual(string.Empty,t.Content);
+			Assert.IsNull(t.Priority);
+			Assert.IsFalse(t.IsCompleted);
+			Assert.IsNull(t.CompletionDate);
+			Assert.IsNull(t.CreationDate);
+			Assert.AreEqual(0,t.Projects.Count);
+			Assert.AreEqual(0, t.Contexts.Count);
+
+		}
+
         [Test]
         public void Priority_TaskWithAPriority_IsA()
         {
