@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TodoTxt.Sharp
 {
-    public static class TaskProcessor
+    internal static class TaskProcessor
     {
         private static readonly Regex PriorityRegex;
         private static readonly Regex DateRegex;

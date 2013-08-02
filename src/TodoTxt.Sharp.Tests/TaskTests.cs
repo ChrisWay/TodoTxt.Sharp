@@ -17,12 +17,11 @@ namespace TodoTxt.Sharp.Tests
 
 			Assert.AreEqual(string.Empty,t.Content);
 			Assert.IsNull(t.Priority);
-			Assert.IsFalse(t.IsCompleted);
+			Assert.IsFalse(t.IsComplete);
 			Assert.IsNull(t.CompletionDate);
 			Assert.IsNull(t.CreationDate);
 			Assert.AreEqual(0,t.Projects.Count);
 			Assert.AreEqual(0, t.Contexts.Count);
-
 		}
 
         [Test]
@@ -31,7 +30,6 @@ namespace TodoTxt.Sharp.Tests
             var t = new Task("(A) a task");
             
             Assert.AreEqual('A', t.Priority);
-            Assert.IsTrue(t.HasPriority);
         }
 
         [Test]
@@ -40,7 +38,6 @@ namespace TodoTxt.Sharp.Tests
             var t = new Task("(a) a task");
 
             Assert.IsNull(t.Priority);
-            Assert.IsFalse(t.HasPriority); 
         }
 
         [Test]
@@ -49,7 +46,6 @@ namespace TodoTxt.Sharp.Tests
             var t = new Task("(A)(B) a task");
 
             Assert.IsNull(t.Priority);
-            Assert.IsFalse(t.HasPriority);
         }
 
         [Test]
@@ -58,7 +54,6 @@ namespace TodoTxt.Sharp.Tests
             var t = new Task("a task");
 
             Assert.IsNull(t.Priority);
-            Assert.IsFalse(t.HasPriority);
         }
 
         [Test]
