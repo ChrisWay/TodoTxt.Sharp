@@ -15,7 +15,6 @@ namespace TodoTxt.Sharp.Tests
 
 			Assert.AreEqual(string.Empty,t.Content);
 			Assert.IsNull(t.Priority);
-			Assert.IsFalse(t.IsComplete);
 			Assert.IsNull(t.CompletionDate);
 			Assert.IsNull(t.CreationDate);
 			Assert.AreEqual(0,t.Projects.Count);
@@ -29,7 +28,6 @@ namespace TodoTxt.Sharp.Tests
 
 			Assert.IsNull(t.CompletionDate);
 			Assert.IsNull(t.Priority);
-			Assert.IsFalse(t.IsComplete);
 			Assert.IsNull(t.CreationDate);
 			Assert.AreEqual(0, t.Projects.Count);
 			Assert.AreEqual(0, t.Contexts.Count);
@@ -110,7 +108,6 @@ namespace TodoTxt.Sharp.Tests
 			var t = new Task("x 2013-02-06 some task");
 
 			Assert.AreEqual(new DateTime(2013,02,06), t.CompletionDate);
-			Assert.IsTrue(t.IsComplete);
 			Assert.AreEqual("x 2013-02-06 some task", t.Raw);
 		}
 
@@ -144,7 +141,6 @@ namespace TodoTxt.Sharp.Tests
 			Assert.AreEqual(new DateTime(2013,2,5), t.CompletionDate);
 			Assert.AreEqual(new DateTime(2013, 2, 4), t.CreationDate);
 			Assert.AreEqual("x 2013-02-05 2013-02-04 some task", t.Raw);
-			Assert.IsTrue(t.IsComplete);
 		}
 
 		[Test]
@@ -156,7 +152,6 @@ namespace TodoTxt.Sharp.Tests
 			Assert.AreEqual(new DateTime(2013, 8, 2), t.CompletionDate);
 			Assert.AreEqual(new DateTime(2013, 2, 5), t.CreationDate);
 			Assert.AreEqual("x 2013-08-02 2013-02-05 some task", t.Raw);
-			Assert.IsTrue(t.IsComplete);
 		}
     }
 }

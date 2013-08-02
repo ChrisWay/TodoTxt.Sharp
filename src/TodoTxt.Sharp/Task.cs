@@ -8,6 +8,7 @@ namespace TodoTxt.Sharp
 {
 	public class Task
 	{
+		private readonly StringBuilder _rawBuilder;
 		/* 
 		 * Raw getter is calculated from:
 		 *	Are we completed?
@@ -21,20 +22,17 @@ namespace TodoTxt.Sharp
 		 *		Content
 		 */
         public Task(string raw)
+			: this()
         {
             Raw = raw;
         }
 
         public Task()
         {
+			_rawBuilder = new StringBuilder();
         }
 
 		public Priority? Priority { get; set; }
-
-		public bool IsComplete
-		{
-			get { return CompletionDate.HasValue; }
-		}
 
 		public DateTime? CompletionDate { get; set; }
 
@@ -48,20 +46,21 @@ namespace TodoTxt.Sharp
         private string _raw;
 		public string Raw 
         {
-            get 
-			{ 
-				var sb = new StringBuilder();
-				if (IsComplete)
-					sb.AppendFormat("x {0} ", CompletionDate.Value.ToString("yyyy-MM-dd"));
+            get
+            {
+	            _rawBuilder.Clear();
+
+				if (CompletionDate.HasValue)
+					_rawBuilder.AppendFormat("x {0} ", CompletionDate.Value.ToString("yyyy-MM-dd"));
 				else if (Priority.HasValue)
-					sb.AppendFormat("({0}) ", Priority.Value.ToString());
+					_rawBuilder.AppendFormat("({0}) ", Priority.Value.ToString());
 
 				if (CreationDate.HasValue)
-					sb.Append(CreationDate.Value.ToString("yyyy-MM-dd")).Append(" ");
+					_rawBuilder.Append(CreationDate.Value.ToString("yyyy-MM-dd")).Append(" ");
 
-				sb.Append(Content);
+				_rawBuilder.Append(Content);
 
-				return sb.ToString();
+				return _rawBuilder.ToString();
 			}
             set
             {
