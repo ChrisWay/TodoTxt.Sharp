@@ -1,32 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using TodoTxt.Sharp.Annotations;
 
 namespace TodoTxt.Sharp
 {
-	public class Task
+	public class Task : INotifyPropertyChanged
 	{
 		private readonly StringBuilder _rawBuilder;
-		private const string ContextsRegexString = @"@\S+\b(\s|$)"; // Works but will return a space at the end of the match if not end of string!
+		private const string ContextsRegexString = @"@\S+\b(\s|$)";
 		private const string ProjectsRegexString = @"\+\S+\b(\s|$)";
 
 		private static readonly Regex ContextsRegex;
 		private static readonly Regex ProjectsRegex;
-		/* 
-		 * Raw getter is calculated from:
-		 *	Are we completed?
-		 *	- Yes
-		 *		x "x 2013-08-02 a task"
-		 *		Date of Completion "x 2013-08-02 a task"
-		 *		(Optional) Creation Date "x 2013-08-02 2013-08-01 a task"
-		 *	- No
-		 *		(Optional) Priority "(A) a task"
-		 *		(Optional) Creation Date "(A) 2013-08-02 a task" / "2013-08-02 a task"
-		 *		Content
-		 */
+
+		private string _raw;
+		private Priority? _priority;
+		private DateTime? _completionDate;
+		private DateTime? _creationDate;
+		private string _content;
+
         public Task(string raw)
 			: this()
         {
@@ -44,13 +41,68 @@ namespace TodoTxt.Sharp
 			ProjectsRegex = new Regex(ProjectsRegexString);
 		}
 
-		public Priority? Priority { get; set; }
+		public Priority? Priority
+		{
+			get { return _priority; }
+			set
+			{
+				if(_priority == value)
+					return;
+				
+				_priority = value;
+				if (_priority.HasValue)
+					CompletionDate = null;
 
-		public DateTime? CompletionDate { get; set; }
+				OnPropertyChanged();
+			}
+		}
 
-		public DateTime? CreationDate { get; set; }
+		public DateTime? CompletionDate
+		{
+			get { return _completionDate; }
+			set 
+			{ 
+				if(_completionDate == value)
+					return;
 
-		public string Content { get; set; }
+				_completionDate = value;
+
+				if (_completionDate.HasValue)
+					Priority = null;
+
+				OnPropertyChanged();
+			}
+		}
+
+		public DateTime? CreationDate
+		{
+			get { return _creationDate; }
+			set
+			{
+				if(_creationDate == value)
+					return;
+
+				_creationDate = value;
+
+				OnPropertyChanged();
+			}
+		}
+
+		public string Content
+		{
+			get { return _content; }
+			set
+			{
+				if (_content == value)
+					return;
+
+				_content = value;
+
+				OnPropertyChanged();
+				OnPropertyChanged("Contexts");
+				OnPropertyChanged("Projects");
+			}
+		}
 
 		public IEnumerable<string> Contexts
 		{
@@ -60,9 +112,14 @@ namespace TodoTxt.Sharp
 			}
 
 		}
-		public IList<string> Projects { get; set; }
+		public IEnumerable<string> Projects
+		{
+			get
+			{
+				return ProjectsRegex.Matches(Content).Cast<Match>().Select(m => m.Value.Substring(1).TrimEnd(' '));
+			}
+		}
 
-        private string _raw;
 		public string Raw 
         {
             get
@@ -92,5 +149,14 @@ namespace TodoTxt.Sharp
         {
             return Raw;
         }
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		[NotifyPropertyChangedInvocator]
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		{
+			PropertyChangedEventHandler handler = PropertyChanged;
+			if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+		}
 	}
 }
