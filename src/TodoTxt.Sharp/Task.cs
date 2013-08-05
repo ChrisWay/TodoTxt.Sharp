@@ -54,6 +54,7 @@ namespace TodoTxt.Sharp
 					CompletionDate = null;
 
 				OnPropertyChanged();
+				OnPropertyChanged("Raw");
 			}
 		}
 
@@ -71,6 +72,7 @@ namespace TodoTxt.Sharp
 					Priority = null;
 
 				OnPropertyChanged();
+				OnPropertyChanged("Raw");
 			}
 		}
 
@@ -85,6 +87,7 @@ namespace TodoTxt.Sharp
 				_creationDate = value;
 
 				OnPropertyChanged();
+				OnPropertyChanged("Raw");
 			}
 		}
 
@@ -101,6 +104,7 @@ namespace TodoTxt.Sharp
 				OnPropertyChanged();
 				OnPropertyChanged("Contexts");
 				OnPropertyChanged("Projects");
+				OnPropertyChanged("Raw");
 			}
 		}
 
@@ -156,7 +160,8 @@ namespace TodoTxt.Sharp
 		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
 			PropertyChangedEventHandler handler = PropertyChanged;
-			if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+			if (handler != null) 
+				handler(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }
