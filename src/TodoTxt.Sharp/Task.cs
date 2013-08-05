@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace TodoTxt.Sharp
@@ -9,6 +10,11 @@ namespace TodoTxt.Sharp
 	public class Task
 	{
 		private readonly StringBuilder _rawBuilder;
+		private const string ContextsRegexString = @"@\S+\b(\s|$)"; // Works but will return a space at the end of the match if not end of string!
+		private const string ProjectsRegexString = @"\+\S+\b(\s|$)";
+
+		private static readonly Regex ContextsRegex;
+		private static readonly Regex ProjectsRegex;
 		/* 
 		 * Raw getter is calculated from:
 		 *	Are we completed?
@@ -32,6 +38,12 @@ namespace TodoTxt.Sharp
 			_rawBuilder = new StringBuilder();
         }
 
+		static Task()
+		{
+			ContextsRegex = new Regex(ContextsRegexString);
+			ProjectsRegex = new Regex(ProjectsRegexString);
+		}
+
 		public Priority? Priority { get; set; }
 
 		public DateTime? CompletionDate { get; set; }
@@ -40,7 +52,14 @@ namespace TodoTxt.Sharp
 
 		public string Content { get; set; }
 
-		public IList<string> Contexts { get; set; }
+		public IEnumerable<string> Contexts
+		{
+			get
+			{		
+				return ContextsRegex.Matches(Content).Cast<Match>().Select(m => m.Value.Substring(1).TrimEnd(' '));
+			}
+
+		}
 		public IList<string> Projects { get; set; }
 
         private string _raw;

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
 using System;
 
 namespace TodoTxt.Sharp.Tests
@@ -18,7 +19,7 @@ namespace TodoTxt.Sharp.Tests
 			Assert.IsNull(t.CompletionDate);
 			Assert.IsNull(t.CreationDate);
 			Assert.AreEqual(0,t.Projects.Count);
-			Assert.AreEqual(0, t.Contexts.Count);
+			Assert.AreEqual(0, t.Contexts.Count());
 		}
 
 		[Test]
@@ -30,7 +31,7 @@ namespace TodoTxt.Sharp.Tests
 			Assert.IsNull(t.Priority);
 			Assert.IsNull(t.CreationDate);
 			Assert.AreEqual(0, t.Projects.Count);
-			Assert.AreEqual(0, t.Contexts.Count);
+			Assert.AreEqual(0, t.Contexts.Count());
 			Assert.AreEqual("Some task", t.Content);
 		}
 
@@ -40,6 +41,78 @@ namespace TodoTxt.Sharp.Tests
 			var t = new Task("(A) 2013-08-02 Some task");
 
 			Assert.AreEqual("Some task", t.Content);
+		}
+
+		[Test]
+		public void Task_Projects_ProjectsListShouldContainProjects()
+		{
+			var t = new Task("Some task +TestProject +AnotherProject");
+
+			Assert.IsNotNull(t.Projects);
+			Assert.IsTrue(t.Projects.Contains("TestProject"));
+			Assert.IsTrue(t.Projects.Contains("AnotherProject"));
+		}
+
+		[Test]
+		public void Task_Contexts_ContextsListShouldContainContexts()
+		{
+			var t = new Task("Some task @TestContext @AnotherContext");
+
+			Assert.IsNotNull(t.Contexts);
+			Assert.IsTrue(t.Contexts.Contains("TestContext"));
+			Assert.IsTrue(t.Contexts.Contains("AnotherContext"));
+		}
+
+		[Test]
+		public void Task_ContextsProjects_MixContextsAndProjects()
+		{
+			var t = new Task("Some task @TestContext +AProject @AnotherContext");
+
+			Assert.IsNotNull(t.Contexts);
+			Assert.IsNotNull(t.Projects);
+			Assert.IsTrue(t.Contexts.Contains("TestContext"));
+			Assert.IsTrue(t.Contexts.Contains("AnotherContext"));
+			Assert.IsTrue(t.Projects.Contains("AProject"));
+		}
+
+		[Test]
+		public void Task_Projects_ProjectsListShouldNotContainInvalidProjects()
+		{
+			var t = new Task("Some task +TestProject +AnotherProject!");
+
+			Assert.IsNotNull(t.Projects);
+			Assert.IsTrue(t.Projects.Contains("TestProject"));
+			Assert.IsFalse(t.Projects.Contains("AnotherProject!"));
+		}
+
+		[Test]
+		public void Task_Projects_ProjectsListShouldBeAfterPriority()
+		{
+			var t = new Task("+AProject (A) Some task +TestProject");
+
+			Assert.IsNotNull(t.Projects);
+			Assert.IsTrue(t.Projects.Contains("TestProject"));
+			Assert.IsFalse(t.Projects.Contains("AProject"));
+		}
+
+		[Test]
+		public void Task_Contexts_ContextsListShouldBeAfterPriority()
+		{
+			var t = new Task("@AContext (A) Some task @TestContext");
+
+			Assert.IsNotNull(t.Contexts);
+			Assert.IsTrue(t.Projects.Contains("TestContext"));
+			Assert.IsFalse(t.Projects.Contains("AContext"));
+		}
+
+		[Test]
+		public void Task_Contexts_ContextssListShouldNotContainInvalidContexts()
+		{
+			var t = new Task("Some task @TestContext @AnotherContext!");
+
+			Assert.IsNotNull(t.Contexts);
+			Assert.IsTrue(t.Contexts.Contains("TestContext"));
+			Assert.IsFalse(t.Contexts.Contains("AnotherContext!"));
 		}
 
 		//Incomplete Task Tests

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace TodoTxt.Sharp
 {
@@ -16,11 +11,11 @@ namespace TodoTxt.Sharp
 
 		static TaskProcessor()
 		{
-			const string DateRegexString = @"(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01]) ";
+			const string dateRegexString = @"(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01]) ";
 			
 			PriorityRegex = new Regex(@"^\([A-Z]\) {1}");
-			DateRegex = new Regex("^" + DateRegexString);
-			CompletedRegex = new Regex("^x " + DateRegexString);
+			DateRegex = new Regex("^" + dateRegexString);
+			CompletedRegex = new Regex("^x " + dateRegexString);
 		}
 
 		public static void ProcessRaw(string raw, Task task)
