@@ -24,16 +24,16 @@ namespace TodoTxt.Sharp
 		private DateTime? _creationDate;
 		private string _content;
 
-        public Task(string raw)
+		public Task(string raw)
 			: this()
-        {
-            Raw = raw;
-        }
+		{
+			Raw = raw;
+		}
 
-        public Task()
-        {
+		public Task()
+		{
 			_rawBuilder = new StringBuilder();
-        }
+		}
 
 		static Task()
 		{
@@ -61,8 +61,8 @@ namespace TodoTxt.Sharp
 		public DateTime? CompletionDate
 		{
 			get { return _completionDate; }
-			set 
-			{ 
+			set
+			{
 				if(_completionDate == value)
 					return;
 
@@ -111,7 +111,7 @@ namespace TodoTxt.Sharp
 		public IEnumerable<string> Contexts
 		{
 			get
-			{		
+			{
 				return ContextsRegex.Matches(Content).Cast<Match>().Select(m => m.Value.Substring(1).TrimEnd(' '));
 			}
 
@@ -125,10 +125,10 @@ namespace TodoTxt.Sharp
 		}
 
 		public string Raw 
-        {
-            get
-            {
-	            _rawBuilder.Clear();
+		{
+			get
+			{
+				_rawBuilder.Clear();
 
 				if (CompletionDate.HasValue)
 					_rawBuilder.AppendFormat("x {0} ", CompletionDate.Value.ToString("yyyy-MM-dd"));
@@ -142,17 +142,17 @@ namespace TodoTxt.Sharp
 
 				return _rawBuilder.ToString();
 			}
-            set
-            {
-                _raw = value;
-                TaskProcessor.ProcessRaw(_raw, this);
-            }
-        }
+			set
+			{
+				_raw = value;
+				TaskProcessor.ProcessRaw(_raw, this);
+			}
+		}
 
-        public override string ToString()
-        {
-            return Raw;
-        }
+		public override string ToString()
+		{
+			return Raw;
+		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
