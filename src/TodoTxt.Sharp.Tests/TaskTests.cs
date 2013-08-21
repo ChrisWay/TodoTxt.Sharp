@@ -4,9 +4,9 @@ using System;
 
 namespace TodoTxt.Sharp.Tests
 {
-    [TestFixture]
-    public class TaskTests
-    {
+	[TestFixture]
+	public class TaskTests
+	{
 		//Basic Tests
 
 		[Test]
@@ -119,61 +119,61 @@ namespace TodoTxt.Sharp.Tests
 
 		//Incomplete Task Tests
 
-        [Test]
-        public void Priority_TaskWithAPriority_IsA()
-        {
-            var t = new Task("(A) a task");
-            
-            Assert.AreEqual(Priority.A, t.Priority);
+		[Test]
+		public void Priority_TaskWithAPriority_IsA()
+		{
+			var t = new Task("(A) a task");
+			
+			Assert.AreEqual(Priority.A, t.Priority);
 			Assert.AreEqual("(A) a task", t.Raw);
-        }
+		}
 
-        [Test]
-        public void Priority_TaskWithALowerCasePriority_IsNull()
-        {
-            var t = new Task("(a) a task");
+		[Test]
+		public void Priority_TaskWithALowerCasePriority_IsNull()
+		{
+			var t = new Task("(a) a task");
 
-            Assert.IsNull(t.Priority);
+			Assert.IsNull(t.Priority);
 			Assert.AreEqual("(a) a task", t.Raw);
-        }
+		}
 
-        [Test]
-        public void Priority_TaskWithTwoPriorities_IsNull()
-        {
-            var t = new Task("(A)(B) a task");
+		[Test]
+		public void Priority_TaskWithTwoPriorities_IsNull()
+		{
+			var t = new Task("(A)(B) a task");
 
-            Assert.IsNull(t.Priority);
+			Assert.IsNull(t.Priority);
 			Assert.AreEqual("(A)(B) a task", t.Raw);
-        }
+		}
 
-        [Test]
-        public void Priority_TaskWithNoPriority_IsNull()
-        {
-            var t = new Task("a task");
+		[Test]
+		public void Priority_TaskWithNoPriority_IsNull()
+		{
+			var t = new Task("a task");
 
-            Assert.IsNull(t.Priority);
+			Assert.IsNull(t.Priority);
 			Assert.AreEqual("a task", t.Raw);
-        }
+		}
 
-        [Test]
-        public void CreationDate_TaskWithACreationDateAtStart_CreationDateIsNotNull()
-        {
-            var t = new Task("2013-02-05 some task");
+		[Test]
+		public void CreationDate_TaskWithACreationDateAtStart_CreationDateIsNotNull()
+		{
+			var t = new Task("2013-02-05 some task");
 
-            Assert.AreEqual(new DateTime(2013, 2, 5), t.CreationDate);
+			Assert.AreEqual(new DateTime(2013, 2, 5), t.CreationDate);
 			Assert.IsNull(t.Priority);
 			Assert.AreEqual("2013-02-05 some task", t.Raw);
-        }
+		}
 
-        [Test]
-        public void CreationDate_TaskWithPriorityAndACreationDate_CreationDateIsNotNull()
-        {
-            var t = new Task("(A) 2013-02-05 some task");
+		[Test]
+		public void CreationDate_TaskWithPriorityAndACreationDate_CreationDateIsNotNull()
+		{
+			var t = new Task("(A) 2013-02-05 some task");
 
-            Assert.AreEqual(new DateTime(2013, 2, 5), t.CreationDate);
+			Assert.AreEqual(new DateTime(2013, 2, 5), t.CreationDate);
 			Assert.AreEqual(Priority.A, t.Priority);
 			Assert.AreEqual("(A) 2013-02-05 some task", t.Raw);
-        }
+		}
 
 		// Completed Task Tests
 
@@ -228,5 +228,5 @@ namespace TodoTxt.Sharp.Tests
 			Assert.AreEqual(new DateTime(2013, 2, 5), t.CreationDate);
 			Assert.AreEqual("x 2013-08-02 2013-02-05 some task", t.Raw);
 		}
-    }
+	}
 }
