@@ -9,159 +9,163 @@ using TodoTxt.Sharp.Annotations;
 
 namespace TodoTxt.Sharp
 {
-	public class Task : INotifyPropertyChanged
-	{
-		private readonly StringBuilder _rawBuilder;
-		private const string ContextsRegexString = @"@\S+\b(\s|$)";
-		private const string ProjectsRegexString = @"\+\S+\b(\s|$)";
+    public class Task : INotifyPropertyChanged
+    {
+        private const string ContextsRegexString = @"@\S+\b(\s|$)";
+        private const string ProjectsRegexString = @"\+\S+\b(\s|$)";
 
-		private static readonly Regex ContextsRegex;
-		private static readonly Regex ProjectsRegex;
+        private static readonly Regex ContextsRegex;
+        private static readonly Regex ProjectsRegex;
+        private static readonly Regex PriorityRegex;
+        private static readonly Regex DateRegex;
+        private static readonly Regex CompletedRegex;
 
-		private string _raw;
-		private Priority? _priority;
-		private DateTime? _completionDate;
-		private DateTime? _creationDate;
-		private string _content;
+        private string _raw;
+        private Priority? _priority;
+        private DateTime? _completionDate;
+        private DateTime? _creationDate;
+        private string _content;
 
-		public Task(string raw)
-			: this()
-		{
-			Raw = raw;
-		}
+        public Task(string raw)
+            : this()
+        {
+            Raw = raw;
+        }
 
-		public Task()
-		{
-			_rawBuilder = new StringBuilder();
-		}
+        public Task()
+        {
+        }
 
-		static Task()
-		{
-			ContextsRegex = new Regex(ContextsRegexString);
-			ProjectsRegex = new Regex(ProjectsRegexString);
-		}
+        static Task()
+        {
+            ContextsRegex = new Regex(ContextsRegexString);
+            ProjectsRegex = new Regex(ProjectsRegexString);
+            const string dateRegexString = @"(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01]) ";
 
-		public Priority? Priority
-		{
-			get { return _priority; }
-			set
-			{
-				if(_priority == value)
-					return;
-				
-				_priority = value;
-				if (_priority.HasValue)
-					CompletionDate = null;
+            PriorityRegex = new Regex(@"^\([A-Z]\) {1}");
+            DateRegex = new Regex("^" + dateRegexString);
+            CompletedRegex = new Regex("^x " + dateRegexString);
+        }
 
-				OnPropertyChanged();
-				OnPropertyChanged("Raw");
-			}
-		}
+        public Priority? Priority
+        {
+            get { return _priority; }
+            private set { _priority = value; }
+        }
 
-		public DateTime? CompletionDate
-		{
-			get { return _completionDate; }
-			set
-			{
-				if(_completionDate == value)
-					return;
+        public DateTime? CompletionDate
+        {
+            get { return _completionDate; }
+            private set { _completionDate = value; }
+        }
 
-				_completionDate = value;
+        public DateTime? CreationDate
+        {
+            get { return _creationDate; }
+            private set { _creationDate = value; }
+        }
 
-				if (_completionDate.HasValue)
-					Priority = null;
+        public string Content
+        {
+            get { return _content; }
+            private set { _content = value; }
+        }
 
-				OnPropertyChanged();
-				OnPropertyChanged("Raw");
-			}
-		}
+        public IEnumerable<string> Contexts
+        {
+            get
+            {
+                return ContextsRegex.Matches(Content).Cast<Match>().Select(m => m.Value.Substring(1).TrimEnd(' '));
+            }
 
-		public DateTime? CreationDate
-		{
-			get { return _creationDate; }
-			set
-			{
-				if(_creationDate == value)
-					return;
+        }
+        public IEnumerable<string> Projects
+        {
+            get
+            {
+                return ProjectsRegex.Matches(Content).Cast<Match>().Select(m => m.Value.Substring(1).TrimEnd(' '));
+            }
+        }
 
-				_creationDate = value;
+        public string Raw 
+        {
+            get { return _raw; }
+            set
+            {
+                _raw = value;
+                ProcessRaw(_raw);
+            }
+        }
 
-				OnPropertyChanged();
-				OnPropertyChanged("Raw");
-			}
-		}
+        public override string ToString()
+        {
+            return Raw;
+        }
 
-		public string Content
-		{
-			get { return _content; }
-			set
-			{
-				if (_content == value)
-					return;
+        private void ProcessRaw(string raw)
+        {
+            var isCompleted = CompletedRegex.IsMatch(raw);
+            if (isCompleted)
+            {
+                CompletionDate = DateTime.Parse(raw.Substring(2, 10));
+                raw = raw.Substring(13);
+            }
 
-				_content = value;
+            var hasPriority = PriorityRegex.IsMatch(raw);
+            if (hasPriority)
+            {
+                Priority = (Priority)Enum.Parse(typeof(Priority), raw.Substring(1, 1));
+                raw = raw.Substring(4);
+            }
 
-				OnPropertyChanged();
-				OnPropertyChanged("Contexts");
-				OnPropertyChanged("Projects");
-				OnPropertyChanged("Raw");
-			}
-		}
+            var hasCreationDate = DateRegex.IsMatch(raw);
+            if (hasCreationDate)
+            {
+                CreationDate = DateTime.Parse(raw.Substring(0, 10));
+                raw = raw.Substring(11);
+            }
 
-		public IEnumerable<string> Contexts
-		{
-			get
-			{
-				return ContextsRegex.Matches(Content).Cast<Match>().Select(m => m.Value.Substring(1).TrimEnd(' '));
-			}
+            Content = raw;
+        }
 
-		}
-		public IEnumerable<string> Projects
-		{
-			get
-			{
-				return ProjectsRegex.Matches(Content).Cast<Match>().Select(m => m.Value.Substring(1).TrimEnd(' '));
-			}
-		}
+        public void IncreasePriority()
+        {
+            ChangePriority(true);
+        }
 
-		public string Raw 
-		{
-			get
-			{
-				_rawBuilder.Clear();
+        public void ReducePriority()
+        {
+            ChangePriority(false);
+        }
 
-				if (CompletionDate.HasValue)
-					_rawBuilder.AppendFormat("x {0} ", CompletionDate.Value.ToString("yyyy-MM-dd"));
-				else if (Priority.HasValue)
-					_rawBuilder.AppendFormat("({0}) ", Priority.Value.ToString());
+        private void ChangePriority(bool increase)
+        {
+            if (!Priority.HasValue)
+            {
+                Priority = Sharp.Priority.A;
+                Raw = Raw.Insert(0, string.Format("({0}) ", Priority));
+                return;
+            }
 
-				if (CreationDate.HasValue)
-					_rawBuilder.Append(CreationDate.Value.ToString("yyyy-MM-dd")).Append(" ");
+            if(Priority == (increase ? Sharp.Priority.A : Sharp.Priority.Z))
+                return;
 
-				_rawBuilder.Append(Content);
+            if (increase)
+                Priority--;
+            else 
+                Priority++;
 
-				return _rawBuilder.ToString();
-			}
-			set
-			{
-				_raw = value;
-				TaskProcessor.ProcessRaw(_raw, this);
-			}
-		}
+            Raw = Raw.Remove(1, 1).Insert(1, Priority.ToString());
+        }
 
-		public override string ToString()
-		{
-			return Raw;
-		}
+        public event PropertyChangedEventHandler PropertyChanged;
 
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		[NotifyPropertyChangedInvocator]
-		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-		{
-			PropertyChangedEventHandler handler = PropertyChanged;
-			if (handler != null) 
-				handler(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
 }
