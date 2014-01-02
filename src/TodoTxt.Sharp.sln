@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTxt.Sharp", "TodoTxt.Sharp\TodoTxt.Sharp.csproj", "{C390BB54-3B0C-4FE4-9E3A-1244D68C00E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTxt.Sharp.Tests", "TodoTxt.Sharp.Tests\TodoTxt.Sharp.Tests.csproj", "{140F362E-3321-49F3-A06E-5B5D25027764}"
@@ -11,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{475EF3
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTxt.Sharp.UI", "TodoTxt.Sharp.UI\TodoTxt.Sharp.UI.csproj", "{A95F95F3-35E4-4612-B730-F7D4208F281C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +30,10 @@ Global
 		{140F362E-3321-49F3-A06E-5B5D25027764}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{140F362E-3321-49F3-A06E-5B5D25027764}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{140F362E-3321-49F3-A06E-5B5D25027764}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A95F95F3-35E4-4612-B730-F7D4208F281C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A95F95F3-35E4-4612-B730-F7D4208F281C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A95F95F3-35E4-4612-B730-F7D4208F281C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A95F95F3-35E4-4612-B730-F7D4208F281C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
