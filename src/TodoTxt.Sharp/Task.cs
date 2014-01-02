@@ -47,6 +47,8 @@ namespace TodoTxt.Sharp
             CompletedRegex = new Regex("^x " + dateRegexString);
         }
 
+        public int FilePosition { get; internal set; }
+
         public Priority? Priority
         {
             get { return _priority; }
