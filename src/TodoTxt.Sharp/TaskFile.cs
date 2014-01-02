@@ -110,21 +110,20 @@ namespace TodoTxt.Sharp
         /// 
         /// </summary>
         /// <param name="path"></param>
-        /// <param name="newLine"></param>
         /// <returns></returns>
         /// <remarks>Original Source: http://stackoverflow.com/questions/11829559/how-can-i-detect-if-a-file-has-unix-line-feeds-n-or-windows-line-feeds-r-n </remarks>
         private string DetectNewLine(string path)
         {
             using (var fileStream = File.OpenRead(path))
             {
-                char prevChar = '\0';
+                var prevChar = '\0';
                 // Read the first 4000 characters to try and find a newline
                 for (int i = 0; i < 4000; i++)
                 {
                     int b;
                     if ((b = fileStream.ReadByte()) == -1) break;
 
-                    char curChar = (char)b;
+                    var curChar = (char)b;
 
                     if (curChar == '\n')
                     {
