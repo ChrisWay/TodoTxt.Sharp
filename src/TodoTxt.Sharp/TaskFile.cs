@@ -25,7 +25,7 @@ namespace TodoTxt.Sharp
         /// Loads the tasks from a file.
         /// If the file does not exist it is created.
         /// </summary>
-        public async void LoadFromFile(bool ignoreLastWriteTime = false)
+        public void LoadFromFile(bool ignoreLastWriteTime = false)
         {
             if (!ignoreLastWriteTime && File.GetLastWriteTimeUtc(_path) <= _fileLastWriteTime)
                 return;
@@ -42,11 +42,11 @@ namespace TodoTxt.Sharp
             using (var stream = new StreamReader(file)) {
                 string line;
                 int filePosition = 1;
-                while ((line = await stream.ReadLineAsync()) != null) {
-                    if (!string.IsNullOrWhiteSpace(line)) {
-                        Tasks.Add(new Task(line) { FilePosition = filePosition });
-                        filePosition++;
-                    }
+                while ((line = stream.ReadLine()) != null) {
+                    if (string.IsNullOrWhiteSpace(line)) 
+                        continue;
+                    Tasks.Add(new Task(line) { FilePosition = filePosition });
+                    filePosition++;
                 }
             }
 
@@ -65,13 +65,13 @@ namespace TodoTxt.Sharp
 
             var rawWithNewLine = task.Raw + _newLineDelimter;
             Tasks.Add(task);
-
             if (filePosition == -1) {
                 task.FilePosition = Tasks.Count;
                 File.AppendAllText(_path, rawWithNewLine);
             }
             else {
-                MoveTask(task, filePosition);
+                UpdateFilePositions(task, filePosition);
+                WriteAllTasksToFile();
             }
         }
 
@@ -87,6 +87,7 @@ namespace TodoTxt.Sharp
             throw new NotImplementedException();
         }
 
+        //TODO This needs some testing!!
         public void MoveTask(Task task, int newFilePosition)
         {
             LoadFromFile();
@@ -94,15 +95,36 @@ namespace TodoTxt.Sharp
             if(newFilePosition > Tasks.Count + 1)
                 throw new InvalidOperationException();
 
-            if(!Tasks.Contains(task))
+            if (!Tasks.Contains(task))
                 throw new InvalidOperationException();
 
-            foreach (var task2 in Tasks.Where(t => t.FilePosition > task.FilePosition && t.FilePosition <= newFilePosition)) {
-                task2.FilePosition--;
-            }
-            task.FilePosition = newFilePosition;
+            UpdateFilePositions(task, newFilePosition);
+            WriteAllTasksToFile();
+        }
 
+        //A method that can be used from MoveTask and AddTask
+        //so we only have the task moving stuff in one place
+
+        private void UpdateFilePositions(Task task, int filePosition)
+        {
+            // We are adding a new task at the specified position
+            if (task.FilePosition == 0) {
+                foreach (var task2 in Tasks.Where(t => t.FilePosition >= filePosition)) {
+                    task2.FilePosition++;
+                }
+            }
+            else {
+                foreach (var task2 in Tasks.Where(t => t.FilePosition > task.FilePosition && t.FilePosition <= filePosition))
+                {
+                    task2.FilePosition--;
+                }
+            }
+            task.FilePosition = filePosition;
             Tasks.Sort(new TaskFilePositionComparer());
+        }
+
+        private void WriteAllTasksToFile()
+        {
             File.WriteAllText(_path, string.Join(_newLineDelimter, Tasks.Select(t => t.Raw)));
         }
 
