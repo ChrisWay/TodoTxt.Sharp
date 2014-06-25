@@ -1,7 +1,11 @@
 ﻿<Window x:Class="TodoTxt.Sharp.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:TodoTxt.Sharp.UI.ViewModels"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525" d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -9,9 +13,9 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
-        <Button Content="Open File" Grid.Row="0" Click="OpenButton_OnClick"></Button>
+        <Button Content="Open File" Grid.Row="0" Command="{Binding OpenFileCommand}"></Button>
         <TextBox Grid.Row="1" x:Name="InputTextBox" KeyUp="InputTextBox_OnKeyUp"></TextBox>
-        <ListBox Grid.Row="2" x:Name="TaskListBox">
+        <ListBox Grid.Row="2" x:Name="TaskListBox" ItemsSource="{Binding File.Tasks}">
             
         </ListBox>
     </Grid>

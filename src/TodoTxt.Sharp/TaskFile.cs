@@ -114,8 +114,7 @@ namespace TodoTxt.Sharp
                 }
             }
             else {
-                foreach (var task2 in Tasks.Where(t => t.FilePosition > task.FilePosition && t.FilePosition <= filePosition))
-                {
+                foreach (var task2 in Tasks.Where(t => t.FilePosition > task.FilePosition && t.FilePosition <= filePosition)) {
                     task2.FilePosition--;
                 }
             }

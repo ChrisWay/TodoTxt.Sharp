@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using TodoTxt.Sharp.UI.ViewModels;
 
 namespace TodoTxt.Sharp.UI
 {
@@ -25,18 +26,11 @@ namespace TodoTxt.Sharp.UI
         private TaskFile _file;
         public MainWindow()
         {
+            this.DataContext = new MainWindowViewModel();
             InitializeComponent();
         }
 
-        private void OpenButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            var fileChooser = new OpenFileDialog();
-
-            if (fileChooser.ShowDialog() == true) {
-                _file = new TaskFile(fileChooser.FileName);
-                TaskListBox.ItemsSource = _file.Tasks;
-            }
-        }
+       
 
         private void InputTextBox_OnKeyUp(object sender, KeyEventArgs e)
         {
