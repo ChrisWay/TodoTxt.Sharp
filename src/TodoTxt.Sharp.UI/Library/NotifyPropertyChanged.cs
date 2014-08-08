@@ -11,32 +11,27 @@ namespace TodoTxt.Sharp.UI.Library
         public event PropertyChangedEventHandler PropertyChanged;
         public event PropertyChangingEventHandler PropertyChanging;
 
-        public void RaisePropertyChangedEvent([CallerMemberName] string propertyName = null)
-        {
+        public void RaisePropertyChangedEvent([CallerMemberName] string propertyName = null) {
             var handler = PropertyChanged;
             if (handler != null)
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void RaisePropertyChangingEvent<T>(Expression<Func<T>> property)
-        {
+        public void RaisePropertyChangingEvent<T>(Expression<Func<T>> property) {
             RaisePropertyChangingEvent(PropertyNameHelper.GetPropertyName(property));
         }
 
-        public void RaisePropertyChangingEvent([CallerMemberName] string propertyName = null)
-        {
+        public void RaisePropertyChangingEvent([CallerMemberName] string propertyName = null) {
             var handler = PropertyChanging;
             if (handler != null)
                 handler(this, new PropertyChangingEventArgs(propertyName));
         }
 
-        public void RaisePropertyChangedEvent<T>(Expression<Func<T>> property)
-        {
+        public void RaisePropertyChangedEvent<T>(Expression<Func<T>> property) {
             RaisePropertyChangedEvent(PropertyNameHelper.GetPropertyName(property));
         }
 
-        public void RaiseAndSetIfChanged<T>(ref T backingField, T newValue, [CallerMemberName] string propertyName = null)
-        {
+        public void RaiseAndSetIfChanged<T>(ref T backingField, T newValue, [CallerMemberName] string propertyName = null) {
             if (propertyName == null)
                 throw new ArgumentNullException("propertyName");
 
@@ -46,7 +41,6 @@ namespace TodoTxt.Sharp.UI.Library
             RaisePropertyChangingEvent(propertyName);
             backingField = newValue;
             RaisePropertyChangedEvent(propertyName);
-
         }
     }
 
@@ -55,18 +49,15 @@ namespace TodoTxt.Sharp.UI.Library
     /// </summary>
     internal class PropertyNameHelper
     {
-        public static string GetPropertyName<T>(Expression<Func<T>> expression)
-        {
+        public static string GetPropertyName<T>(Expression<Func<T>> expression) {
             return GetPropertyNameFromLambda(expression);
         }
 
-        public static string GetPropertyName<T>(Expression<Func<T, Object>> expression)
-        {
+        public static string GetPropertyName<T>(Expression<Func<T, Object>> expression) {
             return GetPropertyNameFromLambda(expression);
         }
 
-        private static string GetPropertyNameFromLambda(LambdaExpression lambda)
-        {
+        private static string GetPropertyNameFromLambda(LambdaExpression lambda) {
             MemberExpression memberExpression = null;
             var unaryExpression = lambda.Body as UnaryExpression;
 

@@ -13,8 +13,7 @@ namespace TodoTxt.Sharp
         private DateTime _fileLastWriteTime;
         private string _newLineDelimter;
 
-        public TaskFile(string path)
-        {
+        public TaskFile(string path) {
             _path = path;
             LoadFromFile();
         }
@@ -25,8 +24,7 @@ namespace TodoTxt.Sharp
         /// Loads the tasks from a file.
         /// If the file does not exist it is created.
         /// </summary>
-        public void LoadFromFile(bool ignoreLastWriteTime = false)
-        {
+        public void LoadFromFile(bool ignoreLastWriteTime = false) {
             if (!ignoreLastWriteTime && File.GetLastWriteTimeUtc(_path) <= _fileLastWriteTime)
                 return;
 
@@ -43,9 +41,9 @@ namespace TodoTxt.Sharp
                 string line;
                 int filePosition = 1;
                 while ((line = stream.ReadLine()) != null) {
-                    if (string.IsNullOrWhiteSpace(line)) 
+                    if (string.IsNullOrWhiteSpace(line))
                         continue;
-                    Tasks.Add(new Task(line) { FilePosition = filePosition });
+                    Tasks.Add(new Task(line) {FilePosition = filePosition});
                     filePosition++;
                 }
             }
@@ -59,8 +57,7 @@ namespace TodoTxt.Sharp
         /// </summary>
         /// <param name="task">The task to add</param>
         /// <param name="filePosition">The line number where the task should be added, -1 adds to the task to the end of the file</param>
-        public void AddTask(Task task, int filePosition = -1)
-        {
+        public void AddTask(Task task, int filePosition = -1) {
             LoadFromFile();
 
             var rawWithNewLine = task.Raw + _newLineDelimter;
@@ -75,24 +72,21 @@ namespace TodoTxt.Sharp
             }
         }
 
-        public void DeleteTask(Task task)
-        {
+        public void DeleteTask(Task task) {
             LoadFromFile();
             File.WriteAllText(_path, string.Join(_newLineDelimter, File.ReadLines(_path).Where(l => l != task.Raw).ToList()));
             LoadFromFile();
         }
 
-        public void UpdateTask(Task originalTask, Task newTask)
-        {
+        public void UpdateTask(Task originalTask, Task newTask) {
             throw new NotImplementedException();
         }
 
         //TODO This needs some testing!!
-        public void MoveTask(Task task, int newFilePosition)
-        {
+        public void MoveTask(Task task, int newFilePosition) {
             LoadFromFile();
 
-            if(newFilePosition > Tasks.Count + 1)
+            if (newFilePosition > Tasks.Count + 1)
                 throw new InvalidOperationException();
 
             if (!Tasks.Contains(task))
@@ -105,8 +99,7 @@ namespace TodoTxt.Sharp
         //A method that can be used from MoveTask and AddTask
         //so we only have the task moving stuff in one place
 
-        private void UpdateFilePositions(Task task, int filePosition)
-        {
+        private void UpdateFilePositions(Task task, int filePosition) {
             // We are adding a new task at the specified position
             if (task.FilePosition == 0) {
                 foreach (var task2 in Tasks.Where(t => t.FilePosition >= filePosition)) {
@@ -122,8 +115,7 @@ namespace TodoTxt.Sharp
             Tasks.Sort(new TaskFilePositionComparer());
         }
 
-        private void WriteAllTasksToFile()
-        {
+        private void WriteAllTasksToFile() {
             File.WriteAllText(_path, string.Join(_newLineDelimter, Tasks.Select(t => t.Raw)));
         }
 
@@ -133,21 +125,18 @@ namespace TodoTxt.Sharp
         /// <param name="path"></param>
         /// <returns></returns>
         /// <remarks>Original Source: http://stackoverflow.com/questions/11829559/how-can-i-detect-if-a-file-has-unix-line-feeds-n-or-windows-line-feeds-r-n </remarks>
-        private string DetectNewLine(string path)
-        {
-            using (var fileStream = File.OpenRead(path))
-            {
+        private string DetectNewLine(string path) {
+            using (var fileStream = File.OpenRead(path)) {
                 var prevChar = '\0';
                 // Read the first 4000 characters to try and find a newline
-                for (int i = 0; i < 4000; i++)
-                {
+                for (int i = 0; i < 4000; i++) {
                     int b;
-                    if ((b = fileStream.ReadByte()) == -1) break;
+                    if ((b = fileStream.ReadByte()) == -1)
+                        break;
 
-                    var curChar = (char)b;
+                    var curChar = (char) b;
 
-                    if (curChar == '\n')
-                    {
+                    if (curChar == '\n') {
                         return prevChar == '\r' ? "\r\n" : "\n";
                     }
 

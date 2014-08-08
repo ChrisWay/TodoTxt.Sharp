@@ -27,17 +27,13 @@ namespace TodoTxt.Sharp
         private string _content;
 
         public Task(string raw)
-            : this()
-        {
+            : this() {
             Raw = raw;
         }
 
-        public Task()
-        {
-        }
+        public Task() {}
 
-        static Task()
-        {
+        static Task() {
             ContextsRegex = new Regex(ContextsRegexString);
             ProjectsRegex = new Regex(ProjectsRegexString);
             const string dateRegexString = @"(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01]) ";
@@ -49,80 +45,61 @@ namespace TodoTxt.Sharp
 
         public int FilePosition { get; internal set; }
 
-        public Priority? Priority
-        {
+        public Priority? Priority {
             get { return _priority; }
             private set { _priority = value; }
         }
 
-        public DateTime? CompletionDate
-        {
+        public DateTime? CompletionDate {
             get { return _completionDate; }
             private set { _completionDate = value; }
         }
 
-        public DateTime? CreationDate
-        {
+        public DateTime? CreationDate {
             get { return _creationDate; }
             private set { _creationDate = value; }
         }
 
-        public string Content
-        {
+        public string Content {
             get { return _content; }
             private set { _content = value; }
         }
 
-        public IEnumerable<string> Contexts
-        {
-            get
-            {
-                return ContextsRegex.Matches(Content).Cast<Match>().Select(m => m.Value.Substring(1).TrimEnd(' '));
-            }
-
-        }
-        public IEnumerable<string> Projects
-        {
-            get
-            {
-                return ProjectsRegex.Matches(Content).Cast<Match>().Select(m => m.Value.Substring(1).TrimEnd(' '));
-            }
+        public IEnumerable<string> Contexts {
+            get { return ContextsRegex.Matches(Content).Cast<Match>().Select(m => m.Value.Substring(1).TrimEnd(' ')); }
         }
 
-        public string Raw 
-        {
+        public IEnumerable<string> Projects {
+            get { return ProjectsRegex.Matches(Content).Cast<Match>().Select(m => m.Value.Substring(1).TrimEnd(' ')); }
+        }
+
+        public string Raw {
             get { return _raw; }
-            set
-            {
+            set {
                 _raw = value;
                 ProcessRaw(_raw);
             }
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return Raw;
         }
 
-        private void ProcessRaw(string raw)
-        {
+        private void ProcessRaw(string raw) {
             var isCompleted = CompletedRegex.IsMatch(raw);
-            if (isCompleted)
-            {
+            if (isCompleted) {
                 CompletionDate = DateTime.Parse(raw.Substring(2, 10));
                 raw = raw.Substring(13);
             }
 
             var hasPriority = PriorityRegex.IsMatch(raw);
-            if (hasPriority)
-            {
-                Priority = (Priority)Enum.Parse(typeof(Priority), raw.Substring(1, 1));
+            if (hasPriority) {
+                Priority = (Priority) Enum.Parse(typeof(Priority), raw.Substring(1, 1));
                 raw = raw.Substring(4);
             }
 
             var hasCreationDate = DateRegex.IsMatch(raw);
-            if (hasCreationDate)
-            {
+            if (hasCreationDate) {
                 CreationDate = DateTime.Parse(raw.Substring(0, 10));
                 raw = raw.Substring(11);
             }
@@ -130,31 +107,27 @@ namespace TodoTxt.Sharp
             Content = raw;
         }
 
-        public void IncreasePriority()
-        {
+        public void IncreasePriority() {
             ChangePriority(true);
         }
 
-        public void ReducePriority()
-        {
+        public void ReducePriority() {
             ChangePriority(false);
         }
 
-        private void ChangePriority(bool increase)
-        {
-            if (!Priority.HasValue)
-            {
+        private void ChangePriority(bool increase) {
+            if (!Priority.HasValue) {
                 Priority = Sharp.Priority.A;
                 Raw = Raw.Insert(0, string.Format("({0}) ", Priority));
                 return;
             }
 
-            if(Priority == (increase ? Sharp.Priority.A : Sharp.Priority.Z))
+            if (Priority == (increase ? Sharp.Priority.A : Sharp.Priority.Z))
                 return;
 
             if (increase)
                 Priority--;
-            else 
+            else
                 Priority++;
 
             Raw = Raw.Remove(1, 1).Insert(1, Priority.ToString());
@@ -163,10 +136,9 @@ namespace TodoTxt.Sharp
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) 
+            if (handler != null)
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
