@@ -15,31 +15,20 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using TodoTxt.Sharp.UI.ViewModels;
+using Splat;
 
 namespace TodoTxt.Sharp.UI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        private TaskFile _file;
-        public MainWindow()
-        {
-            this.DataContext = new MainWindowViewModel();
+
+        public MainWindow() {
+            this.DataContext = Locator.Current.GetService<MainWindowViewModel>();
             InitializeComponent();
         }
 
-       
-
-        private void InputTextBox_OnKeyUp(object sender, KeyEventArgs e)
-        {
-            if(e.Key != Key.Return)
-                return;
-
-            _file.AddTask(new Task(InputTextBox.Text));
-            InputTextBox.Clear();
-
-        }
     }
 }

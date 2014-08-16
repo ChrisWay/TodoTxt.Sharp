@@ -5,30 +5,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TodoTxt.Sharp.UI.Library;
+using ReactiveUI;
+using TodoTxt.Sharp.UI.Services;
 
 namespace TodoTxt.Sharp.UI.ViewModels
 {
-    public class MainWindowViewModel : NotifyPropertyChanged
+    public class MainWindowViewModel : ReactiveObject
     {
-        public MainWindowViewModel()
-        {
-            OpenFileCommand = new SimpleCommand(() => {
-                var ofd = new OpenFileDialog();
+        private readonly IGetFileNameService _fileNameService;
 
-                if (ofd.ShowDialog() ?? false) {
-                    File = new TaskFile(ofd.FileName);
-                }
-             });
+        public MainWindowViewModel(IGetFileNameService fileNameService) {
+            _fileNameService = fileNameService;
+
+            OpenFileCommand = ReactiveCommand.Create();
+            OpenFileCommand.Subscribe(x => {
+                var fileName = _fileNameService.GetTodoFilePath();
+                if (fileName == null)
+                    return;
+
+                FileViewModels.Add(new TaskFileViewModel(new TaskFile(fileName)));
+            });
+
+            FileViewModels = new ReactiveList<TaskFileViewModel>();
         }
 
-        public SimpleCommand OpenFileCommand { get; set; }
-
-        private TaskFile _file;
-        public TaskFile File
-        {
-            get { return _file; }
-            set { RaiseAndSetIfChanged(ref _file, value);}
-        }
+        public ReactiveCommand<object> OpenFileCommand { get; protected set; }
+        public ReactiveList<TaskFileViewModel> FileViewModels { get; protected set; } 
     }
 }

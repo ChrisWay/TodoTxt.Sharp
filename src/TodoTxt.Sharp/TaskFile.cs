@@ -18,6 +18,10 @@ namespace TodoTxt.Sharp
             LoadFromFile();
         }
 
+        public string Path {
+            get { return _path; }
+        }
+
         public List<Task> Tasks { get; private set; }
 
         /// <summary>

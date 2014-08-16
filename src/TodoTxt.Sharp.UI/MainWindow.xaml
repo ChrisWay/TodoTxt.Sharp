@@ -1,22 +1,35 @@
-﻿<Window x:Class="TodoTxt.Sharp.UI.MainWindow"
+﻿<controls:MetroWindow x:Class="TodoTxt.Sharp.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:viewModels="clr-namespace:TodoTxt.Sharp.UI.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto"  />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        
-        <Button Content="Open File" Grid.Row="0" Command="{Binding OpenFileCommand}"></Button>
-        <TextBox Grid.Row="1" x:Name="InputTextBox" KeyUp="InputTextBox_OnKeyUp"></TextBox>
-        <ListBox Grid.Row="2" x:Name="TaskListBox" ItemsSource="{Binding File.Tasks}">
-            
-        </ListBox>
-    </Grid>
-</Window>
+        Title="TodoTxt Sharp" Height="350" Width="525" d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}">
+    
+    <controls:MetroWindow.Resources>
+        <DataTemplate DataType="{x:Type viewModels:TaskFileViewModel}">
+            <ListBox ItemsSource="{Binding File.Tasks}"></ListBox>
+        </DataTemplate>
+    </controls:MetroWindow.Resources>
+    
+    <controls:MetroWindow.InputBindings>
+        <KeyBinding Modifiers="Control" Key="O" Command="{Binding OpenFileCommand}" />
+    </controls:MetroWindow.InputBindings>
+    
+    <controls:MetroWindow.RightWindowCommands>
+        <controls:WindowCommands>
+            <Button Content="open file" Command="{Binding OpenFileCommand}"  />
+        </controls:WindowCommands>
+    </controls:MetroWindow.RightWindowCommands>
+    
+    <TabControl ItemsSource="{Binding FileViewModels}">
+        <TabControl.ItemTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding Name}" />
+            </DataTemplate>
+        </TabControl.ItemTemplate>
+         
+    </TabControl>
+</controls:MetroWindow>
