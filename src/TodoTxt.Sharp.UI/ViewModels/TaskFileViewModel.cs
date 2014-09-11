@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ReactiveUI;
+using Caliburn.Micro;
 
 namespace TodoTxt.Sharp.UI.ViewModels
 {
-    public class TaskFileViewModel : ReactiveObject
+    public class TaskFileViewModel : Screen
     {
         private readonly TaskFile _file;
 

@@ -15,18 +15,15 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using TodoTxt.Sharp.UI.ViewModels;
-using Splat;
 
-namespace TodoTxt.Sharp.UI
+namespace TodoTxt.Sharp.UI.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ShellView.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class ShellView
     {
-
-        public MainWindow() {
-            this.DataContext = Locator.Current.GetService<MainWindowViewModel>();
+        public ShellView() {
             InitializeComponent();
         }
 
