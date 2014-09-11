@@ -7,7 +7,7 @@
         xmlns:viewModels="clr-namespace:TodoTxt.Sharp.UI.ViewModels"
         xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
-        Title="TodoTxt Sharp" Height="350" Width="525" d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
+        Height="350" Width="525" d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
         cal:Message.Attach="[Key O Modifier Control] = [OpenFile]">
     
     <controls:MetroWindow.Resources>
@@ -22,12 +22,5 @@
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
     
-    <TabControl x:Name="Items">
-        <TabControl.ItemTemplate>
-            <DataTemplate>
-                <TextBlock Text="{Binding Name}" />
-            </DataTemplate>
-        </TabControl.ItemTemplate>
-         
-    </TabControl>
+    <TabControl x:Name="Items" />
 </controls:MetroWindow>

@@ -10,21 +10,21 @@ namespace TodoTxt.Sharp.UI.ViewModels
 {
     public class TaskFileViewModel : Screen
     {
-        private readonly TaskFile _file;
+        private TaskFile _file;
 
-        public TaskFileViewModel(TaskFile file) {
-            if(file == null)
-                throw new ArgumentNullException("file");
+        public TaskFileViewModel(string filePath) {
+            if(string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentNullException("filePath");
 
-            _file = file;
-        }
-
-        public string Name {
-            get { return Path.GetFileNameWithoutExtension(File.Path); }
+            File = new TaskFile(filePath);
         }
 
         public TaskFile File {
             get { return _file; }
+            private set {
+                _file = value;
+                DisplayName = Path.GetFileNameWithoutExtension(File.Path);
+            }
         }
     }
 }

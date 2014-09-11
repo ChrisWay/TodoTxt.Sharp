@@ -18,12 +18,17 @@ namespace TodoTxt.Sharp.UI.ViewModels
             _fileNameService = fileNameService;
         }
 
+        protected override void OnInitialize() {
+            base.OnInitialize();
+            DisplayName = "TodoTxt Sharp";
+        }
+
         public void OpenFile() {
             var fileName = _fileNameService.GetTodoFilePath();
             if (fileName == null)
                 return;
 
-            ActivateItem(new TaskFileViewModel(new TaskFile(fileName)));
+            ActivateItem(new TaskFileViewModel(fileName));
         }
     }
 }
