@@ -22,5 +22,11 @@
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
     
-    <TabControl x:Name="Items" />
+    <TabControl x:Name="Items">
+        <TabControl.ItemTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding DisplayName}" ToolTip="{Binding File.Path}" />
+            </DataTemplate>
+        </TabControl.ItemTemplate>
+    </TabControl>
 </controls:MetroWindow>
