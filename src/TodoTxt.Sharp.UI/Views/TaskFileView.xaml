@@ -6,6 +6,14 @@
              xmlns:viewModels="clr-namespace:TodoTxt.Sharp.UI.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance viewModels:TaskFileViewModel}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="ReadyOnlyTemplate">
+            <TextBlock Text="{Binding}" />
+        </DataTemplate>
+        <DataTemplate x:Key="editingTemplate">
+            <TextBlock Text="{Binding}" />
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid>
             <ListView ItemsSource="{Binding File.Tasks}"></ListView>
     </Grid>
