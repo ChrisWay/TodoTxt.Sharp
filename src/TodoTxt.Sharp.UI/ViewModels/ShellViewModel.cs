@@ -28,7 +28,8 @@ namespace TodoTxt.Sharp.UI.ViewModels
             if (fileName == null)
                 return;
 
-            ActivateItem(new TaskFileViewModel(fileName));
+            var existing = Items.OfType<TaskFileViewModel>().SingleOrDefault(x => x.File.Path == fileName);
+            ActivateItem(existing ?? new TaskFileViewModel(fileName));
         }
 
         public void CreateFile() {
@@ -36,7 +37,8 @@ namespace TodoTxt.Sharp.UI.ViewModels
             if (fileName == null)
                 return;
 
-            ActivateItem(new TaskFileViewModel(fileName, true));
+            var existing = Items.OfType<TaskFileViewModel>().SingleOrDefault(x => x.File.Path == fileName);
+            ActivateItem(existing ?? new TaskFileViewModel(fileName, true));
         }
     }
 }
