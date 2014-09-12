@@ -35,7 +35,7 @@ namespace TodoTxt.Sharp
             Tasks = new List<Task>();
 
             if (!File.Exists(_path)) {
-                File.Create(_path);
+                using (File.Create(_path)) {}
                 _newLineDelimter = Environment.NewLine;
                 return;
             }
