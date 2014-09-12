@@ -23,22 +23,13 @@ namespace TodoTxt.Sharp.UI.ViewModels
             DisplayName = "TodoTxt Sharp";
         }
 
-        public void OpenFile() {
-            var fileName = _fileNameService.GetTodoFilePath();
+        public void LoadFile(bool isNew) {
+            var fileName = isNew ? _fileNameService.GetNewTodoFilePath() : _fileNameService.GetTodoFilePath();
             if (fileName == null)
                 return;
 
             var existing = Items.OfType<TaskFileViewModel>().SingleOrDefault(x => x.File.Path == fileName);
-            ActivateItem(existing ?? new TaskFileViewModel(fileName));
-        }
-
-        public void CreateFile() {
-            var fileName = _fileNameService.GetNewTodoFilePath();
-            if (fileName == null)
-                return;
-
-            var existing = Items.OfType<TaskFileViewModel>().SingleOrDefault(x => x.File.Path == fileName);
-            ActivateItem(existing ?? new TaskFileViewModel(fileName, true));
+            ActivateItem(existing ?? new TaskFileViewModel(fileName, isNew));
         }
     }
 }
