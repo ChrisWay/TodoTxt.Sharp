@@ -30,5 +30,13 @@ namespace TodoTxt.Sharp.UI.ViewModels
 
             ActivateItem(new TaskFileViewModel(fileName));
         }
+
+        public void CreateFile() {
+            var fileName = _fileNameService.GetNewTodoFilePath();
+            if (fileName == null)
+                return;
+
+            ActivateItem(new TaskFileViewModel(fileName, true));
+        }
     }
 }

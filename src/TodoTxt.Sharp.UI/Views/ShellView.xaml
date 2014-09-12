@@ -18,7 +18,8 @@
         
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
-            <Button Content="open file" cal:Message.Attach="OpenFile"  />
+            <Button Content="create file" cal:Message.Attach="CreateFile" />
+            <Button Content="open file" cal:Message.Attach="OpenFile" />
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
     
