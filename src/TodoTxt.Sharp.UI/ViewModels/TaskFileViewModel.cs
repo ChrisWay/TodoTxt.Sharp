@@ -11,6 +11,8 @@ namespace TodoTxt.Sharp.UI.ViewModels
     public class TaskFileViewModel : Screen
     {
         private TaskFile _file;
+        private bool _isInEdit;
+        private Task _selectedTodo;
 
         public TaskFileViewModel(string filePath, bool shouldFileBeWiped = false) {
             if(string.IsNullOrWhiteSpace(filePath))
@@ -23,6 +25,26 @@ namespace TodoTxt.Sharp.UI.ViewModels
             }
 
             File = new TaskFile(filePath);
+        }
+
+        public bool IsInEdit {
+            get { return _isInEdit; }
+            set {
+                if (value.Equals(_isInEdit))
+                    return;
+                _isInEdit = value;
+                NotifyOfPropertyChange(() => IsInEdit);
+            }
+        }
+
+        public Task SelectedTodo {
+            get { return _selectedTodo; }
+            set {
+                if (Equals(value, _selectedTodo))
+                    return;
+                _selectedTodo = value;
+                NotifyOfPropertyChange(() => SelectedTodo);
+            }
         }
 
         public TaskFile File {

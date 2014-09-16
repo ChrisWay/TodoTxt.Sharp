@@ -6,7 +6,33 @@
              xmlns:viewModels="clr-namespace:TodoTxt.Sharp.UI.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance viewModels:TaskFileViewModel}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="ReadyOnlyTemplate">
+            <TextBlock Text="{Binding Path=Raw}" />
+        </DataTemplate>
+        <DataTemplate x:Key="EditTemplate">
+            <TextBox Text="{Binding Path=Raw}" />
+        </DataTemplate>
+
+        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}" x:Key="EditReadOnlyStyle">
+            <Setter Property="ContentTemplate" Value="{StaticResource ReadyOnlyTemplate}" />
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Path=DataContext.IsInEdit, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True" />
+                        <Condition Binding="{Binding RelativeSource={RelativeSource Self},Path=IsSelected}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="ContentTemplate" Value="{StaticResource EditTemplate}" />
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
     <Grid>
-            <ListView ItemsSource="{Binding File.Tasks}"></ListView>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <CheckBox IsChecked="{Binding IsInEdit}"></CheckBox>
+        <ListBox Grid.Row="1" ItemsSource="{Binding File.Tasks}" ItemContainerStyle="{StaticResource EditReadOnlyStyle}" SelectedItem="{Binding SelectedTodo}" SelectionMode="Single"></ListBox>
     </Grid>
 </UserControl>
