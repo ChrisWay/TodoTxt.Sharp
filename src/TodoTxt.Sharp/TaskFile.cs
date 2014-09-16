@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using TodoTxt.Sharp.Comparers;
@@ -22,7 +23,7 @@ namespace TodoTxt.Sharp
             get { return _path; }
         }
 
-        public List<Task> Tasks { get; private set; }
+        public ObservableCollection<Task> Tasks { get; private set; }
 
         /// <summary>
         /// Loads the tasks from a file.
@@ -32,7 +33,7 @@ namespace TodoTxt.Sharp
             if (!ignoreLastWriteTime && File.GetLastWriteTimeUtc(_path) <= _fileLastWriteTime)
                 return;
 
-            Tasks = new List<Task>();
+            Tasks = new ObservableCollection<Task>();
 
             if (!File.Exists(_path)) {
                 using (File.Create(_path)) {}
@@ -116,11 +117,11 @@ namespace TodoTxt.Sharp
                 }
             }
             task.FilePosition = filePosition;
-            Tasks.Sort(new TaskFilePositionComparer());
+            //Tasks. Sort(new TaskFilePositionComparer());
         }
 
         private void WriteAllTasksToFile() {
-            File.WriteAllText(_path, string.Join(_newLineDelimter, Tasks.Select(t => t.Raw)));
+            File.WriteAllText(_path, string.Join(_newLineDelimter, Tasks.OrderBy(x => x.FilePosition).Select(t => t.Raw)));
         }
 
         /// <summary>
